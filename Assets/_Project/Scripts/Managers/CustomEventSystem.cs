@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public static class CustomEventSystem
 {
@@ -10,4 +11,10 @@ public static class CustomEventSystem
 
     public static Action OnNewLevelLoad;
     public static void CallNewLevelLoad() => OnNewLevelLoad?.Invoke();
+
+    public static Action OnBallKicked;
+    public static void CallBallKicked() => OnBallKicked?.Invoke();
+
+    public static Action OnBallExploded;
+    public static void CallBallExploded() => OnBallExploded?.Invoke();
 }
