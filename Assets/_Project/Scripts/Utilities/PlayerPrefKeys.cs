@@ -5,4 +5,5 @@ using UnityEngine;
 public class PlayerPrefKeys
 {
     public const string Obstacle = "Obstacle";
+    public const string Player = "Player";
 }

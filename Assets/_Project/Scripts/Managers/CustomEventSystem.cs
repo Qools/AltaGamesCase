@@ -17,4 +17,8 @@ public static class CustomEventSystem
 
     public static Action OnBallExploded;
     public static void CallBallExploded() => OnBallExploded?.Invoke();
+    
+    
+    public static Action OnObstaclesCleared;
+    public static void CallObstaclesCleared() => OnObstaclesCleared?.Invoke();
 }

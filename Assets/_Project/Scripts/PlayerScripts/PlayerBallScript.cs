@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,17 +8,26 @@ public class PlayerBallScript : MonoBehaviour
     [SerializeField] private GameObject _ballPrefab;
     private GameObject _spawnedBall;
 
+
+    [SerializeField] private Rigidbody _playerRb;
+
     [SerializeField] private Vector3 _spawnOffset;
-    [SerializeField] private float _sizeIncreaseCoefficient;
+    [SerializeField] private float _sizeIncreaseCoef;
+    [SerializeField] private float _sizeDecreaseCoef;
+    [SerializeField] private float _loseThreshold;
+    [SerializeField] private float _ballSpeedCoef;
+
+    private float _loseSize;
 
     private bool _isSpawned = false;
     private bool _isGameStarted = false;
     private bool _isBallKicked = false;
 
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        _loseSize = this.transform.localScale.x * _loseThreshold;
     }
 
     // Update is called once per frame
@@ -39,6 +49,8 @@ public class PlayerBallScript : MonoBehaviour
             {
                 _isBallKicked = true;
                 CustomEventSystem.CallBallKicked();
+
+                _checkBallSize();
             }
         }
     }
@@ -72,12 +84,14 @@ public class PlayerBallScript : MonoBehaviour
     {
         CustomEventSystem.OnStartGame += _onGameStart;
         CustomEventSystem.OnBallExploded += _onBallExploded;
+        CustomEventSystem.OnObstaclesCleared += _moveToFinish;
     }
 
     private void OnDisable()
     {
         CustomEventSystem.OnStartGame -= _onGameStart;
         CustomEventSystem.OnBallExploded -= _onBallExploded;
+        CustomEventSystem.OnObstaclesCleared -= _moveToFinish;
     }
 
     private void _spawnBall()
@@ -91,7 +105,7 @@ public class PlayerBallScript : MonoBehaviour
 
         GameObject ball = Instantiate(_ballPrefab, spawnPos, Quaternion.identity, transform.root);
 
-        ball.transform.localScale = this.transform.localScale * 0.5f;
+        ball.transform.localScale = Vector3.one * 0.1f;
 
         _spawnedBall = ball;
 
@@ -101,12 +115,12 @@ public class PlayerBallScript : MonoBehaviour
 
     private void _reducePlayerBallSize()
     {
-        this.transform.localScale += Vector3.one * -_sizeIncreaseCoefficient;
+        this.transform.localScale += Vector3.one * -_sizeDecreaseCoef;
     }
 
     private void _increaseBallSize()
     {
-        _spawnedBall.transform.localScale += Vector3.one * _sizeIncreaseCoefficient;
+        _spawnedBall.transform.localScale += Vector3.one * _sizeIncreaseCoef;
     }
 
     private void _onGameStart()
@@ -118,5 +132,29 @@ public class PlayerBallScript : MonoBehaviour
     {
         _isBallKicked = false;
         _isSpawned = false;
+    }
+
+    private void _checkBallSize()
+    {
+        if (this.transform.localScale.x <= _loseSize)
+        {
+            CustomEventSystem.CallGameOver(GameResult.Lose);
+
+            _onGameOver();
+        }
+    }
+
+    private void _onGameOver()
+    {
+        _isGameStarted = false;
+    }
+
+    private void _moveToFinish()
+    {
+        _isBallKicked = true;
+        _isSpawned = true;
+
+        _playerRb.isKinematic = false;
+        _playerRb.AddForce((_ballSpeedCoef * this.transform.localScale.x) * transform.forward, ForceMode.Impulse);
     }
 }
