@@ -13,6 +13,8 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator Start()
     {
+        Application.targetFrameRate = 60;
+
         yield return StartCoroutine(DataManager.Instance.WaitInit());
 
         yield return StartCoroutine(MenuManager.Instance.WaitInit(MenuManager.Instance.Init));

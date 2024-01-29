@@ -45,25 +45,20 @@ public class PlayerBallScript : MonoBehaviour
             _spawnBall();
         }
 
-        if (_isSpawned)
+
+        if (Input.GetMouseButtonUp(0))
         {
-            if (Input.GetMouseButtonUp(0))
+            if (!_isSpawned)
             {
-                _isBallKicked = true;
-                CustomEventSystem.CallBallKicked();
-
-                _checkBallSize();
+                return;
             }
-        }
-    }
 
-    private void FixedUpdate()
-    {
+            _isBallKicked = true;
+            CustomEventSystem.CallBallKicked();
 
-        if (!_isGameStarted)
-        {
-            return;
+            _checkBallSize();
         }
+     
 
         if (Input.GetMouseButton(0))
         {
@@ -161,8 +156,6 @@ public class PlayerBallScript : MonoBehaviour
         _isBallKicked = true;
         _isSpawned = true;
 
-        //_playerRb.isKinematic = false;
-        //_playerRb.AddForce((_ballSpeedCoef * this.transform.localScale.x) * transform.forward, ForceMode.Impulse);
         this.transform.DOMove(new Vector3(this.transform.position.x, this.transform.localScale.y, _targetTransform.position.z), 2f);
     }
 }

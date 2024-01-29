@@ -80,15 +80,11 @@ public class BallScript : MonoBehaviour
 
     public void StopBall()
     {
-        _ballRb.velocity = Vector3.zero;
-        _ballRb.angularVelocity = Vector3.zero;
         _ballRb.isKinematic = true;
     }
 
     private void _destroyBall()
     {
-        //explosion sfx
-
         CustomEventSystem.CallBallExploded();
 
         this.gameObject.SetActive(false);

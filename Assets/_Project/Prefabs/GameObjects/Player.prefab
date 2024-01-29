@@ -148,6 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ballPrefab: {fileID: 5857034110616504342, guid: d716b168fe6827147ac462e97b04d4ef, type: 3}
   _playerRb: {fileID: 1485014917852305777}
+  _targetTransform: {fileID: 0}
   _spawnOffset: {x: 0, y: 0, z: 2}
   _sizeIncreaseCoef: 0.02
   _sizeDecreaseCoef: 0.01

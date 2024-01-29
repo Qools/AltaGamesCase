@@ -39,12 +39,22 @@ public class ObstacleScript : MonoBehaviour
         _renderer.material.DOColor(_color, _destractionTime).OnComplete(() =>
         {
             _enableVfx(true);
-            DOVirtual.DelayedCall(0.33f, ()=> this.gameObject.SetActive(false));
+            //DOVirtual.DelayedCall(0.33f, ()=> this.gameObject.SetActive(false));
+
+            StartCoroutine(_disableObstacle(0.33f));
         });
     }
 
     private void _enableVfx(bool isEnable)
     {
         _explosionVfx.SetActive(isEnable);
+    }
+
+
+    private IEnumerator _disableObstacle(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        this.gameObject.SetActive(false);
     }
 }
