@@ -11,6 +11,8 @@ public class PlayerBallScript : MonoBehaviour
 
     [SerializeField] private Rigidbody _playerRb;
 
+    [SerializeField] private Transform _targetTransform;
+
     [SerializeField] private Vector3 _spawnOffset;
     [SerializeField] private float _sizeIncreaseCoef;
     [SerializeField] private float _sizeDecreaseCoef;
@@ -151,10 +153,16 @@ public class PlayerBallScript : MonoBehaviour
 
     private void _moveToFinish()
     {
+        if (!_isGameStarted)
+        {
+            return;
+        }
+
         _isBallKicked = true;
         _isSpawned = true;
 
-        _playerRb.isKinematic = false;
-        _playerRb.AddForce((_ballSpeedCoef * this.transform.localScale.x) * transform.forward, ForceMode.Impulse);
+        //_playerRb.isKinematic = false;
+        //_playerRb.AddForce((_ballSpeedCoef * this.transform.localScale.x) * transform.forward, ForceMode.Impulse);
+        this.transform.DOMove(new Vector3(this.transform.position.x, this.transform.localScale.y, _targetTransform.position.z), 2f);
     }
 }

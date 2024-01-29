@@ -8,6 +8,8 @@ public class BallScript : MonoBehaviour
 {
     [SerializeField] private Rigidbody _ballRb;
 
+    [SerializeField] private GameObject _lightningVfx;
+
     [SerializeField] private float _ballSpeedCoef;
     [SerializeField] private float _ballAreaCoef;
     [SerializeField] private float _ballDestroyDelay;
@@ -19,6 +21,8 @@ public class BallScript : MonoBehaviour
     private void Start()
     {
         _ballRb.isKinematic = true;
+
+        _enableVfx(false);
 
         DOVirtual.DelayedCall(_ballSelfDestructionTime, () => _destroyBall());
     }
@@ -57,7 +61,7 @@ public class BallScript : MonoBehaviour
 
             _isKicked = true;
  
-            _stopBall();
+            StopBall();
 
             Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, this.transform.localScale.x * _ballAreaCoef);
             foreach (var hitCollider in hitColliders)
@@ -68,11 +72,13 @@ public class BallScript : MonoBehaviour
                 }
             }
 
+            _enableVfx(true);
+
             DOVirtual.DelayedCall(_ballDestroyDelay, () => _destroyBall());
         }
     }
 
-    private void _stopBall()
+    public void StopBall()
     {
         _ballRb.velocity = Vector3.zero;
         _ballRb.angularVelocity = Vector3.zero;
@@ -85,12 +91,17 @@ public class BallScript : MonoBehaviour
 
         CustomEventSystem.CallBallExploded();
 
-        Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, this.transform.localScale.x * _ballAreaCoef);
+    }
+
+    private void _enableVfx(bool isEnable)
+    {
+        _lightningVfx.SetActive(isEnable);
     }
 }

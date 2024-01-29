@@ -152,4 +152,4 @@ MonoBehaviour:
   _sizeIncreaseCoef: 0.02
   _sizeDecreaseCoef: 0.01
   _loseThreshold: 0.2
-  _ballSpeedCoef: 5
+  _ballSpeedCoef: 2
